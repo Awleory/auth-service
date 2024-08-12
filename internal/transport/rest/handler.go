@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/awleory/medodstest/internal/domain"
@@ -37,4 +38,8 @@ func (h *Handler) InitRouter() *mux.Router {
 	}
 
 	return router
+}
+
+func (h *Handler) GetIP(w *http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.RemoteAddr)
 }
