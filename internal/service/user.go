@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 
 	"github.com/awleory/medodstest/internal/domain"
 )
@@ -18,6 +19,7 @@ type UsersRepository interface {
 type SessionsRepository interface {
 	Create(ctx context.Context, token domain.RefreshSession) error
 	Get(ctx context.Context, token string) (domain.RefreshSession, error)
+	GetByID(ctx context.Context, userID int64) (domain.RefreshSession, error)
 }
 
 type Users struct {
@@ -38,29 +40,29 @@ func NewUsers(repo UsersRepository, sessionsRepo SessionsRepository, hasher Pass
 }
 
 func (s *Users) SignUp(ctx context.Context, inp domain.SignUpInput) error {
-	password, err := s.hasher.Hash(inp.Password)
+	password_hash, err := s.hasher.Hash(inp.Password)
 	if err != nil {
 		return err
 	}
 
 	user := domain.User{
-		Email:    inp.Email,
-		Password: password,
+		Email:    strings.ToLower(inp.Email),
+		Password: password_hash,
 	}
 
 	return s.repo.Create(ctx, user)
 }
 
 func (s *Users) SignIn(ctx context.Context, inp domain.SignInInput) (string, string, error) {
-	password, err := s.hasher.Hash(inp.Password)
+	password_hash, err := s.hasher.Hash(inp.Password)
 	if err != nil {
 		return "", "", err
 	}
 
-	user, err := s.repo.Get(ctx, inp.Email, password)
+	user, err := s.repo.Get(ctx, strings.ToLower(inp.Email), password_hash)
 	if err != nil {
 		return "", "", err
 	}
 
-	return s.generateTokens(ctx, int64(user.ID))
+	return s.generateTokens(ctx, domain.JWTUserClaims{ID: int64(user.ID), IP: inp.IP}, false)
 }

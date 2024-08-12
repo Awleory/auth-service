@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	CONFIG_DIR  = "configs"
+	CONFIG_DIR  = "config"
 	CONFIG_FILE = "main"
 )
 

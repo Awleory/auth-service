@@ -2,7 +2,6 @@ package rest
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/awleory/medodstest/internal/domain"
@@ -13,7 +12,7 @@ type User interface {
 	SignUp(ctx context.Context, inp domain.SignUpInput) error
 	SignIn(ctx context.Context, inp domain.SignInInput) (string, string, error)
 	ParseToken(ctx context.Context, accessToken string) (int64, error)
-	RefreshTokens(ctx context.Context, refreshToken string) (string, string, error)
+	RefreshTokens(ctx context.Context, refreshToken string, userIP string) (string, string, error)
 }
 
 type Handler struct {
@@ -38,8 +37,4 @@ func (h *Handler) InitRouter() *mux.Router {
 	}
 
 	return router
-}
-
-func (h *Handler) GetIP(w *http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.RemoteAddr)
 }

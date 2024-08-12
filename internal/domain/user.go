@@ -10,6 +10,11 @@ func init() {
 	validate = validator.New()
 }
 
+type JWTUserClaims struct {
+	ID int64
+	IP string
+}
+
 type User struct {
 	ID       int    `json:"id"`
 	Email    string `json:"email"`
@@ -28,6 +33,7 @@ func (s *SignUpInput) Validate() error {
 type SignInInput struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,gte=8"`
+	IP       string `json:"ip"`
 }
 
 func (s *SignInInput) Validate() error {

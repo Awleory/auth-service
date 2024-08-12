@@ -3,6 +3,7 @@ package psql
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/awleory/medodstest/internal/domain"
 )
@@ -40,4 +41,16 @@ func (r *Tokens) Get(ctx context.Context, token string) (domain.RefreshSession, 
 	_, err = r.db.Exec("DELETE FROM refresh_tokens WHERE user_id=$1", t.UserID)
 
 	return t, err
+}
+
+func (r *Tokens) GetByID(ctx context.Context, userID int64) (domain.RefreshSession, error) {
+	var t domain.RefreshSession
+	fmt.Println("userID", userID)
+	err := r.db.QueryRow("SELECT id, user_id, token, expires_at FROM refresh_tokens").
+		Scan(&t.ID, &t.UserID, &t.Token, &t.ExpiresAt)
+	if err != nil {
+		return t, err
+	}
+
+	return t, nil
 }

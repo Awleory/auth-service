@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/kelseyhightower/envconfig"
 	"github.com/spf13/viper"
 )
 
@@ -33,10 +32,6 @@ func New(folder, filename string) (*Config, error) {
 	}
 
 	if err := viper.Unmarshal(cfg); err != nil {
-		return nil, err
-	}
-
-	if err := envconfig.Process("db", &cfg.DB); err != nil {
 		return nil, err
 	}
 

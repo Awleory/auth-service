@@ -63,6 +63,8 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	inp.IP = r.Header.Get("X-Forwarded-For")
+
 	accessToken, refreshToken, err := h.usersService.SignIn(r.Context(), inp)
 	if err != nil {
 		logError("signIn", err)
@@ -94,7 +96,9 @@ func (h *Handler) refresh(w http.ResponseWriter, r *http.Request) {
 
 	logrus.Infof("%s", cookie.Value)
 
-	accessToken, refreshToken, err := h.usersService.RefreshTokens(r.Context(), cookie.Value)
+	ip := r.Header.Get("X-Forwarded-For")
+	fmt.Println("ip", ip)
+	accessToken, refreshToken, err := h.usersService.RefreshTokens(r.Context(), cookie.Value, ip)
 	if err != nil {
 		logError("signIn", err)
 		w.WriteHeader(http.StatusInternalServerError)
