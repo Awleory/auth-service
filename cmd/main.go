@@ -11,6 +11,7 @@ import (
 	"github.com/awleory/medodstest/internal/transport/rest"
 	"github.com/awleory/medodstest/pkg/database"
 	"github.com/awleory/medodstest/pkg/hash"
+	"github.com/joho/godotenv"
 
 	_ "github.com/lib/pq"
 
@@ -29,6 +30,11 @@ func init() {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	cfg, err := config.New(CONFIG_DIR, CONFIG_FILE)
 	if err != nil {
 		log.Fatal(err)
@@ -47,11 +53,11 @@ func main() {
 	}
 	defer db.Close()
 
-	hasher := hash.NewSHA1Hasher("salt")
+	hasher := hash.NewSHA1Hasher(os.Getenv("SALT"))
 
 	usersRepo := psql.NewUsers(db)
 	tokensRepo := psql.NewTokens(db)
-	usersService := service.NewUsers(usersRepo, tokensRepo, hasher, []byte("sample secret"))
+	usersService := service.NewUsers(usersRepo, tokensRepo, hasher, []byte(os.Getenv("JWT_SECRET_KEY")))
 
 	handler := rest.NewHandler(usersService)
 
