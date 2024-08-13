@@ -17,9 +17,8 @@ type UsersRepository interface {
 }
 
 type SessionsRepository interface {
-	Create(ctx context.Context, token domain.RefreshSession) error
-	Get(ctx context.Context, token string) (domain.RefreshSession, error)
-	GetByID(ctx context.Context, userID int64) (domain.RefreshSession, error)
+	Create(ctx context.Context, token domain.RefreshToken) error
+	Get(ctx context.Context, token string) (domain.RefreshToken, error)
 }
 
 type Users struct {
@@ -64,5 +63,5 @@ func (s *Users) SignIn(ctx context.Context, inp domain.SignInInput) (string, str
 		return "", "", err
 	}
 
-	return s.generateTokens(ctx, domain.JWTUserClaims{ID: int64(user.ID), IP: inp.IP}, false)
+	return s.generateTokens(ctx, domain.JWTUserClaims{ID: int64(user.ID), IP: inp.IP})
 }

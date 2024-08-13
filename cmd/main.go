@@ -53,11 +53,11 @@ func main() {
 	}
 	defer db.Close()
 
-	hasher := hash.NewSHA1Hasher(os.Getenv("SALT"))
-
-	usersRepo := psql.NewUsers(db)
-	tokensRepo := psql.NewTokens(db)
-	usersService := service.NewUsers(usersRepo, tokensRepo, hasher, []byte(os.Getenv("JWT_SECRET_KEY")))
+	usersService := service.NewUsers(
+		psql.NewUsers(db),
+		psql.NewTokens(db),
+		hash.NewSHA1Hasher(os.Getenv("SALT")),
+		[]byte(os.Getenv("JWT_SECRET_KEY")))
 
 	handler := rest.NewHandler(usersService)
 
@@ -67,7 +67,6 @@ func main() {
 	}
 
 	log.Info("SERVER STARTED")
-
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
