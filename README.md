@@ -1,15 +1,21 @@
 Запуск 
-  make build
-  make run
+  
+    make build
+  
+    make run
 
 Миграция бд
-  make migrate
+
+    make migrate
 
 Запуск тестов
-  make test
+
+    make test
 
 Часть сервиса аутентификации
+
     Три REST маршрута:
+    
       /signUp - регистрация пользователя в системе
           body example
           {
@@ -25,7 +31,7 @@
           }
           в теле ответа будет access token
           
-      /refresh - получение пары refresh, access токенов
+      /refresh - обновляет и возвращает access token; создает новый refresh токен, сохранаяет в бд и в cookie
 
       рефреш токен сохраняется в cookie
       ip адрес пользователя сервис получает из заголовка "X-Forwarded-For"
