@@ -3,8 +3,8 @@ Server:
 
 db:
     username: "postgres"
-    host: "localhost"
+    host: "postgres"
     port: "5432"
-    name: "medodstest"
+    name: "postgres"
     password: "so2037456va"
     sslmode: "disable"

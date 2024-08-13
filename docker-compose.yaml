@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  auth:
+    build: ./
+
+    command: ./wait-for-postgres.sh db ./auth
+    
+    ports: 
+      - 8080:8080
+    container_name: auth
+    environment:
+      POSTGRES_PASSWORD: "so2037456va"
+    depends_on:
+      - db
+   
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: "so2037456va"   
+    ports:
+      - "5432:5432"
+    volumes: 
+      - ./.dbdata/postgres/data:/var/lib/postgresql/data
