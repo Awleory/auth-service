@@ -14,6 +14,7 @@ type PasswordHasher interface {
 type UsersRepository interface {
 	Create(ctx context.Context, user domain.User) error
 	Get(ctx context.Context, email, password string) (domain.User, error)
+	GetEmail(ctx context.Context, userID int64) (string, error)
 }
 
 type SessionsRepository interface {

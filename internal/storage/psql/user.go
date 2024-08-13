@@ -29,3 +29,11 @@ func (r *Users) Get(ctx context.Context, email, password string) (domain.User, e
 
 	return user, err
 }
+
+func (r *Users) GetEmail(ctx context.Context, userID int64) (string, error) {
+	res := ""
+	err := r.db.QueryRow("SELECT email FROM users WHERE id=$1", userID).
+		Scan(&res)
+
+	return res, err
+}

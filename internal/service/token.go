@@ -116,7 +116,11 @@ func (user *Users) RefreshTokens(ctx context.Context, refreshToken string, userI
 	}
 
 	if session.UserIP != userIP {
-		SendMsg()
+		email, err := user.repo.GetEmail(ctx, session.UserID)
+
+		if err == nil {
+			SendMsg(email)
+		}
 		return "", "", errors.New("ip addresses are different")
 	}
 
@@ -126,7 +130,7 @@ func (user *Users) RefreshTokens(ctx context.Context, refreshToken string, userI
 	})
 }
 
-func SendMsg() {
+func SendMsg(email string) {
 	// отправка письма о попытке входа с другого устройства
-	logrus.Infof("%s", "sending message...")
+	logrus.Infof("sending message to %s", email)
 }
